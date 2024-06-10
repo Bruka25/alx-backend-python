@@ -4,6 +4,8 @@
 """Module for concurrent coroutines"""
 
 import asyncio
+from typing import List
+
 wait_random = __import__('0-basic_async_syntax').wait_random
 
 
@@ -19,23 +21,8 @@ async def wait_n(n: int, max_delay: int) -> list:
     Returns:
         list: List of delays in ascending order.
     """
-    # Create a list to store the delays.
-    delays = []
-
-    # Create a list of tasks for n calls to wait_random.
-    tasks = [asyncio.create_task(wait_random(max_delay)) for _ in range(n)]
-
-    # Await each task and insert the result into the delays
-    # list in sorted order
-    for task in tasks:
-        delay = await task
-
-        # Insert the delay in the correct position to maintain ascending order
-        for i, existing_delay in enumerate(delays):
-            if delay < existing_delay:
-                delays.insert(i, delay)
-                break
-        else:
-            delays.append(delay)
-
-    return delays
+    
+     wait_times = await asyncio.gather(
+        *tuple(map(lambda _: wait_random(max_delay), range(n)))
+    )
+    return sorted(wait_times)
