@@ -21,8 +21,9 @@ async def measure_time(n: int, max_delay: int) -> float:
     Returns:
         float: The average time per call.
     """
+
     start_time = time.time()  # Record the start time
-    await wait_n(n, max_delay)  # Run the wait_n coroutine
+    asyncio.run(wait_n(n, max_delay))  # Run the wait_n coroutine
     end_time = time.time()  # Record the end time
 
     total_time = end_time - start_time  # Calculate the total elapsed time
