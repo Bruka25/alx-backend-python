@@ -7,6 +7,7 @@ from client import GithubOrgClient
 from parameterized import parameterized, parameterized_class
 from fixtures import TEST_PAYLOAD
 
+
 class TestGithubOrgClient(unittest.TestCase):
     """Tests the `GithubOrgClient` class."""
 
@@ -153,6 +154,25 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
 
         cls.get_patcher = patch("requests.get", side_effect=get_payload)
         cls.get_patcher.start()
+
+        def test_public_repos(self) -> None:
+            """Tests the `public_repos` method."""
+            self.assertEqual(
+                GithubOrgClient("google").public_repos(),
+                self.expected_repos,
+            )
+
+        def test_public_repos_with_license(self) -> None:
+            """Tests the `public_repos` method with a license."""
+            self.assertEqual(
+                GithubOrgClient("google").public_repos(license="apache-2.0"),
+                self.apache2_repos,
+            )
+
+        @classmethod
+        def tearDownClass(cls) -> None:
+            """Removes the class fixtures after running all tests."""
+            cls.get_patcher.stop()
 
 
 if __name__ == '__main__':
