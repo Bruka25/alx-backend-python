@@ -5,7 +5,7 @@
 import unittest
 from parameterized import parameterized
 from utils import access_nested_map
-
+from typing import Dict, Tuple
 
 class TestAccessNestedMap(unittest.TestCase):
     """Test cases for the access_nested_map function."""
@@ -25,6 +25,20 @@ class TestAccessNestedMap(unittest.TestCase):
         expected: The expected value to be returned by the function.
         """
         self.assertEqual(access_nested_map(nested_map, path), expected)
+
+    @parameterized.expand([
+        ({}, ("a",), KeyError),
+        ({"a": 1}, ("a", "b"), KeyError),
+    ])
+    def test_access_nested_map_exception(
+            self,
+            nested_map: Dict,
+            path: Tuple[str],
+            exception: Exception,
+            ) -> None:
+        """Function for assesing nested exception raising."""
+        with self.assertRaises(exception):
+            access_nested_map(nested_map, path)
 
 
 if __name__ == '__main__':
